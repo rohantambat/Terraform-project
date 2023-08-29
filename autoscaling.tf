@@ -121,3 +121,24 @@ resource "aws_lb_target_group" "web" {
     path = "/"
   }
 }
+
+resource "aws_cloudwatch_metric_alarm" "default" {
+    name = "my-cloudwatch-alarm"
+    metric_name = "CPUUtilization"
+    namespace = "AWS/EC2"
+    threshold = 80
+    stat = "Average"
+    period = 60
+    evaluation_periods = 2
+    alarm_actions = [aws_autoscaling_group.default.arn]
+  }
+
+  resource "aws_sns_topic" "default" {
+    name = "my-sns-topic"
+  }
+
+  resource "aws_sns_topic_subscription" "default" {
+    topic_arn = aws_sns_topic.default.arn
+    endpoint = "your_email_address@example.com"
+    protocol = "email"
+  }
