@@ -44,6 +44,29 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
+resource "aws_security_group" "web" {
+  vpc_id = aws_vpc.main.id
+
+  // Define your security group rules here
+  // For example, allow incoming HTTP and SSH traffic
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  // You can add more rules as needed
+}
+
+
 resource "aws_ec2_instance" "web" {
   count = 2
   ami = "ami-08d61c4a8943c6593"
